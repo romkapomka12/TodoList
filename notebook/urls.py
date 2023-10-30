@@ -1,5 +1,4 @@
-from django.urls import path, include
-import notebook
+from django.urls import path
 from notebook import views
 from notebook.views import (
     TaskListView,
@@ -8,12 +7,14 @@ from notebook.views import (
     TaskUpdateView,
     TaskCreateView,
     TagsDeleteView,
-    CompletionTaskView, TagsView, TaskDeleteView,
+    CompletionTaskView,
+    TagsListView,
+    TaskDeleteView,
 )
 
 urlpatterns = [
     path("", views.home_page, name="task-list"),
-    path("tags/", TagsView.as_view(), name="tags-list"),
+    path("tags/", TagsListView.as_view(), name="tags-list"),
     path("tags/create/", TagsCreateView.as_view(), name="tags-create"),
     path("tags/<int:pk>/update/", TagsUpdateView.as_view(), name="tags-update"),
     path("tags/<int:pk>/delete/", TagsDeleteView.as_view(), name="tags-delete"),
@@ -26,7 +27,6 @@ urlpatterns = [
     path("task/<int:pk>/completion/", CompletionTaskView.as_view(), name="completion"),
     path("task/add/", views.add_task, name="create_task"),
     path("tags/add/", views.add_tag, name="create_tag"),
-
 
 ]
 

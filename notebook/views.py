@@ -1,4 +1,5 @@
 from typing import Any
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import generic
@@ -9,6 +10,28 @@ from notebook.forms import TaskForm, TagForm
 def home_page(request) -> None:
     tasks = Task.objects.all()
     return render(request, "notebook/task_list.html", {"tasks": tasks, "current-path": request.path})
+
+
+def add_task(request) -> None:
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("notebook:task-list")
+    else:
+        form = TaskForm
+    return render(request, "notebook/create_task.html", {"form": form})
+
+
+def add_tag(request) -> None:
+    if request.method == "POST":
+        form = TagForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("notebook:tags-list")
+    else:
+        form = TagForm
+    return render(request, "notebook/create_tag.html", {"form": form})
 
 
 class TaskListView(generic.ListView):
@@ -38,11 +61,10 @@ class TaskDeleteView(generic.DeleteView):
     template_name = "notebook/task_confirm_delete.html"
 
 
-class TagsView(generic.CreateView):
+class TagsListView(generic.ListView):
     model = Tag
 
-    @staticmethod
-    def get(request: Any) -> None:
+    def get(self, request: HttpRequest) -> HttpResponse:
         tags = Tag.objects.all()
         return render(request, "notebook/tags_list.html", {"tags": tags})
 
@@ -72,25 +94,3 @@ class CompletionTaskView(generic.View):
         task.is_done = not task.is_done
         task.save()
         return redirect(reverse("notebook:task-list"))
-
-
-def add_task(request) -> None:
-    if request.method == "POST":
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("notebook:task-list")
-    else:
-        form = TaskForm
-    return render(request, "notebook/create_task.html", {"form": form})
-
-
-def add_tag(request) -> None:
-    if request.method == "POST":
-        form = TagForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("notebook:tags-list")
-    else:
-        form = TagForm
-    return render(request, "notebook/create_tag.html", {"form": form})
