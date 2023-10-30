@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block add_task_button %}
+  <div class="d-flex justify-content-end">
+    <a href="{% url 'notebook:create_task' %}" class="btn btn-primary">Add task</a>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="task-list">
+  {% for task in tasks %}
+    <div class="task-block">
+    <div class="task-content">
+      <div>
+        <p>
+          {% if task.is_done %}
+            <strong>{{ task.content }} <span style="color: #0ba10b;">Done</span></strong>
+            <a href="{% url 'notebook:completion' task.pk %}" class="btn btn-sm float-right undo-button"
+               style="background-color: #C0C0C0;">Undo</a>
+          {% else %}
+            <strong>{{ task.content }} <span style="color: #FF0000; ">NOT Done</span></strong>
+            <a href="{% url 'notebook:completion' task.pk %}" class="btn btn-success btn-sm float-right">Complete</a>
+          {% endif %}
+        </p>
+      </div>
+      <div class="task-details">
+        <p style="font-size: 0.8em;"> Created: {{ task.created|date:"F d, Y" }}
+          {% if task.deadline %}
+            <span style="color: #8B008B;"> Deadline: {{ task.deadline|date:"F d, Y" }}
+          {% endif %}
+          </span>
+        </p>
+        <p>Tag: {% for tag in task.tags.all %}
+          {{ tag.name }}
+          {% if not forloop.last %}
+          {% endif %}
+        {% endfor %}
+          <a href="{% url 'notebook:task-update' task.pk %}">Update</a>
+          <a href="{% url 'notebook:task-delete' task.pk %}">Delete</a>
+        </p>
+      </div>
+    </div>
+    <hr style="border-top: 1px solid #ccc; margin: 10px 0;">
+  {% endfor %}
+</div>
+{% endblock %}
+
+
+
+
+
+
+{##}
+{#{% extends "base.html" %}#}
+{##}
+{#{% block add_task_button %}#}
+{#<div class="d-flex justify-content-end">#}
+{#  <a href="{% url 'notebook:create_task' %}" class="btn btn-primary">Add task</a>#}
+{#</div>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#<div class="task-list">#}
+{#  {% for task in tasks %}#}
+{#  <div class="task-block">#}
+{#    <div class="task-content">#}
+{#      <div>#}
+{#        <p>#}
+{#          <strong>{{ task.content }} <span style="color: #0ba10b;">Done</span></strong>#}
+{#        </p>#}
+{#      </div>#}
+{##}
+{#      <div>#}
+{#        {% if not task.is_done %}#}
+{#        <a href="{% url 'notebook:completion' task.pk %}" class="btn btn-success btn-sm float-right">Complete</a>#}
+{#        {% else %}#}
+{#        <a href="{% url 'notebook:completion' task.pk %}" class="btn btn-sm float-right undo-button" style="background-color: #C0C0C0;">Undo</a>#}
+{#        {% endif %}#}
+{#      </div>#}
+{#    </div>#}
+{#    <div class="task-details">#}
+{#      <p style="font-size: 0.8em;"> Created: {{ task.created|date:"F d, Y" }}#}
+{#        {% if task.deadline %}#}
+{#          <span style="color: #8B008B;"> Deadline: {{ task.deadline|date:"F d, Y" }}#}
+{#        {% endif %}#}
+{#        </span>#}
+{#      </p>#}
+{#      <p>Tag: {% for tag in task.tags.all %}#}
+{#          {{ tag.name }}#}
+{#        {% if not forloop.last %}#}
+{#        {% endif %}#}
+{#        {% endfor %}#}
+{#        <a href="{% url 'notebook:task-update' task.pk %}">Update</a>#}
+{#        <a href="{% url 'notebook:task-delete' task.pk %}">Delete</a>#}
+{#      </p>#}
+{#    </div>#}
+{#  </div>#}
+{#  <hr style="border-top: 1px solid #ccc; margin: 10px 0;">#}
+{#  {% endfor %}#}
+{#</div>#}
+{#{% endblock %}#}
