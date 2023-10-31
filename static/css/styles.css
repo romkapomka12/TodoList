@@ -1,0 +1,10 @@
+body {
+    margin-top: 20px;
+    background-color: whitesmoke;
+}
+
+.sidebar-nav {
+    padding: 0;
+    list-style: none;
+}
+
